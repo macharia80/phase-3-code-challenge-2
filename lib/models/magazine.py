@@ -18,14 +18,17 @@ class Magazine:
             )
             self.id = cursor.lastrowid
         except sqlite3.IntegrityError:
-            # Handle duplicate names
             conn.rollback()
             cursor.execute("SELECT id FROM magazines WHERE name = ?", (self.name,))
-            result = cursor.fetchone()
-            if result:
-                self.id = result[0]
-            else:
-                raise Exception(f"Failed to save magazine: {self.name}")
+            self.id = cursor.fetchone()[0]
         finally:
             conn.commit()
             conn.close()
+
+    def articles(self):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT title FROM articles WHERE magazine_id = ?", (self.id,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [{'title': row[0]} for row in rows]
