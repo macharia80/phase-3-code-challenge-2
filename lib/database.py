@@ -12,6 +12,7 @@ def initialize():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Create authors table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS authors (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,14 +20,16 @@ def initialize():
         )
     """)
 
+    # Create magazines table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS magazines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             category TEXT NOT NULL
         )
     """)
 
+    # Create articles table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS articles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
