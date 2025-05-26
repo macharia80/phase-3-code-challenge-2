@@ -1,46 +1,33 @@
-# scripts/run_queries.py
+import sys
+import os
+
+# Add the project root directory to Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from lib.models.author import Author
 from lib.models.magazine import Magazine
 
 def main():
-    # 🔍 Get an author by ID
-    author = Author.find_by_id(1)
-    if author:
-        print(f"\nArticles by {author.name}:")
-        for article in author.articles():
-            print(" -", article['title'])
+    # Example usage
+    author = Author(name="Sam Macharia")
+    author.save()
 
-        print(f"\nMagazines {author.name} contributed to:")
-        for mag in author.magazines():
-            print(" -", mag['name'])
+    mag = Magazine(name="Science Today", category="Science")
+    mag.save()
 
-        print(f"\nTopic areas of {author.name}:")
-        for topic in author.topic_areas():
-            print(" -", topic)
-    else:
-        print("No author found with ID 1.")
+    author.add_article(mag.id, "Quantum Computing Breakthroughs")
+    author.add_article(mag.id, "Rise Of AI")
+    author.add_article(mag.id, "Rise Of Humanoids")
+    author.add_article(mag.id, "Downfall Of Network Engineering")
+    author.add_article(mag.id, "The Future of Space Travel")
+    author.add_article(mag.id, "Climate Change and Tech Solutions")
+    author.add_article(mag.id, "Ethics in Artificial Intelligence")
+    author.add_article(mag.id, "Renewable Energy Innovations")
 
-    # 📰 Get a magazine by ID
-    magazine = Magazine.find_by_id(1)
-    if magazine:
-        print(f"\nArticles in '{magazine.name}':")
-        for article in magazine.articles():
-            print(" -", article['title'])
 
-        print(f"\nTitles of articles in '{magazine.name}':")
-        for title in magazine.article_titles():
-            print(" -", title)
-
-        print(f"\nAuthors who wrote for '{magazine.name}':")
-        for contributor in magazine.contributors():
-            print(" -", contributor['name'])
-
-        print(f"\nAuthors with >=2 articles in '{magazine.name}':")
-        for row in magazine.contributing_authors():
-            print(" -", row['name'])
-    else:
-        print("No magazine found with ID 1.")
+    print("📰 All articles by Sam Macharia:")
+    for article in author.articles():
+        print(article['title'])
 
 if __name__ == "__main__":
     main()
